@@ -4,6 +4,7 @@ import net.spy.memcached.MemcachedClient;
 import net.spy.memcached.internal.OperationFuture;
 
 import java.net.InetSocketAddress;
+import java.util.function.Supplier;
 
 public class CacheApplication {
 
@@ -20,7 +21,7 @@ public class CacheApplication {
             ));
 
             String operation = args[2];
-            String key = args[3];
+            Supplier<String> key = () -> args[3];
 
             System.out.println("====================");
             System.out.println("operation " + operation);
@@ -28,11 +29,22 @@ public class CacheApplication {
             if (operation.equals("add")) {
                 String expiration = args[4];
                 String value = args[5];
-                addCache(client, key, expiration, value);
+                addCache(client, key.get(), expiration, value);
             } else if (operation.equals("get")) {
-                getCache(client, key);
+                getCache(client, key.get());
                 client.shutdown();
+            } else if(operation.equals("delete")) {
+                client.delete(key.get()).addListener($ -> {
+                    System.out.println("deleted cache by key " + key.get() + " : " + $.get());
+                    client.shutdown();
+                });
+            } else if(operation.equals("flush")) {
+                client.flush().addListener($ -> {
+                    System.out.println("flushed cache " + $.get());
+                    client.shutdown();
+                });
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
