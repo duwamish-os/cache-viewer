@@ -15,34 +15,47 @@ public class CacheApplication {
         System.out.println("connecting to : " + host + ":" + port);
 
         try {
-            MemcachedClient client = new MemcachedClient(new InetSocketAddress(
+            MemcachedClient cacheClient = new MemcachedClient(new InetSocketAddress(
                     host,
                     Integer.parseInt(port)
             ));
 
             String operation = args[2];
             Supplier<String> key = () -> args[3];
+            Supplier<Integer> expiration = () -> Integer.valueOf(args[4]);
+            Supplier<String> value = () -> args[5];
 
-            System.out.println("====================");
-            System.out.println("operation " + operation);
-            System.out.println("====================");
-            if (operation.equals("add")) {
-                String expiration = args[4];
-                String value = args[5];
-                addCache(client, key.get(), expiration, value);
-            } else if (operation.equals("get")) {
-                getCache(client, key.get());
-                client.shutdown();
-            } else if(operation.equals("delete")) {
-                client.delete(key.get()).addListener($ -> {
-                    System.out.println("deleted cache by key " + key.get() + " : " + $.get());
-                    client.shutdown();
-                });
-            } else if(operation.equals("flush")) {
-                client.flush().addListener($ -> {
-                    System.out.println("flushed cache " + $.get());
-                    client.shutdown();
-                });
+            System.out.println("|=========================|");
+            System.out.println("| executing operation " + operation + " |");
+            System.out.println("|=========================|");
+
+            switch (operation) {
+                case "add":
+                    addCache(cacheClient, key.get(), expiration.get(), value.get());
+
+                    break;
+                case "set":
+                    cacheClient.set(key.get(), expiration.get(), value.get()).addListener($ -> {
+                        System.out.println("set cache for key " + key.get());
+                        cacheClient.shutdown();
+                    });
+                    break;
+                case "get":
+                    getCache(cacheClient, key.get());
+                    cacheClient.shutdown();
+                    break;
+                case "delete":
+                    cacheClient.delete(key.get()).addListener($ -> {
+                        System.out.println("deleted cache by key " + key.get() + " : " + $.get());
+                        cacheClient.shutdown();
+                    });
+                    break;
+                case "flush":
+                    cacheClient.flush().addListener($ -> {
+                        System.out.println("flushed cache " + $.get());
+                        cacheClient.shutdown();
+                    });
+                    break;
             }
 
         } catch (Exception e) {
@@ -56,9 +69,9 @@ public class CacheApplication {
         System.out.println("get result: " + o);
     }
 
-    private static void addCache(MemcachedClient client, String key, String expiration, String value) {
+    private static void addCache(MemcachedClient client, String key, int expiration, String value) {
         System.out.println("adding key: " + key + ", value: " + value + ", expiration: " + expiration);
-        OperationFuture<Boolean> add = client.add(key, Integer.valueOf(expiration), value);
+        OperationFuture<Boolean> add = client.add(key, expiration, value);
         add.addListener($ -> {
             System.out.println("add result: " + $.get());
             client.shutdown();
