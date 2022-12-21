@@ -1,4 +1,4 @@
-package com.cache;
+package com.cache.memcached;
 
 import net.spy.memcached.MemcachedClient;
 import net.spy.memcached.internal.OperationFuture;
@@ -6,7 +6,7 @@ import net.spy.memcached.internal.OperationFuture;
 import java.net.InetSocketAddress;
 import java.util.function.Supplier;
 
-public class CacheApplication {
+public class MemcachedApplication {
 
     public static void main(String[] args) {
         String host = args[0];
