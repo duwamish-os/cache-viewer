@@ -54,15 +54,6 @@ public class RedisConfig {
         return new LettuceConnectionFactory(redisSentinelConfiguration, getLettuceClientConfiguration());
     }
 
-
-    RedisConfiguration redisConfig() {
-        List<RedisNode> redisNodes = getRedisNodes(redisSentinelNodes);
-        RedisSentinelConfiguration redisSentinelConfiguration = new RedisSentinelConfiguration();
-        redisSentinelConfiguration.master(redisSentinelMaster);
-        redisSentinelConfiguration.setSentinels(redisNodes);
-        return redisSentinelConfiguration;
-    }
-
     List<RedisNode> getRedisNodes(List<String> redisSentinelNodes) {
         List<RedisNode> redisNodes = new ArrayList<>();
         for (String node : redisSentinelNodes) {
@@ -74,8 +65,7 @@ public class RedisConfig {
         }
 
         if (redisNodes.size() < 1) {
-            throw new IllegalStateException("Invalid redis sentinel configuration," +
-                " missing or malformed spring.redis.sentinel.nodes");
+            throw new IllegalStateException("Must be at least 2 redis.sentinel.nodes");
         }
 
         return redisNodes;
