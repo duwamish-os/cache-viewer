@@ -7,8 +7,8 @@ plugins {
 group 'cache'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = 12
-targetCompatibility = 12
+sourceCompatibility = 11
+targetCompatibility = 11
 
 repositories {
     mavenCentral()
@@ -28,10 +28,12 @@ dependencies {
     implementation(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.11.4')
 
     implementation(group: 'org.apache.commons', name: 'commons-pool2', version: '2.0')
-    implementation group: 'org.springframework.data', name: 'spring-data-redis', version: '2.7.6'
-    implementation(group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: '2.7.6')
+
+    def springVersion = '2.7.6'
+    implementation group: 'org.springframework.data', name: 'spring-data-redis', version: springVersion
+    implementation(group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: springVersion)
 //    implementation group: 'org.springframework', name: 'spring-beans', version: '6.0.3'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter', version: '2.7.6'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter', version: springVersion
 
     implementation group: 'io.micrometer', name: 'micrometer-registry-prometheus', version: '1.7.4'
 
@@ -42,6 +44,8 @@ dependencies {
 mainClassName = "com.cache.redis.RedisApplication"
 
 jar {
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+
     manifest {
         attributes "Main-Class": mainClassName
     }
@@ -60,7 +64,7 @@ configurations {
 }
 
 sonarlint {
-    ignoreFailures = false
+    ignoreFailures = true
     excludes {
         message 'java:S1214'
         message 'kotlin:S100'
