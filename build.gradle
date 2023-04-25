@@ -1,6 +1,7 @@
 plugins {
     id 'application'
     id 'java'
+    id "name.remal.sonarlint" version "1.5.0"
 }
 
 group 'cache'
@@ -18,6 +19,8 @@ dependencies {
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version:  '2.17.0'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.17.0'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.17.0'
+    implementation 'org.redisson:redisson:3.19.0'
+    implementation group: 'redis.clients', name: 'jedis', version: '4.3.1'
 
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
@@ -54,4 +57,17 @@ configurations {
     all {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
     }
+}
+
+sonarlint {
+    ignoreFailures = false
+    excludes {
+        message 'java:S1214'
+        message 'kotlin:S100'
+        message 'xml:S125'
+    }
+    includes {
+        message 'java:S4266' // Enable java:S4266 which is disabled by default
+    }
+    ruleParameter('java:S119', 'format', '^[A-Z][a-zA-Z0-9]*$') // Allow upper camel-case for type parameter names
 }
