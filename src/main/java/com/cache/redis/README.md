@@ -147,3 +147,115 @@ docker network inspect cache-vista_vpnet
 ]
 
 ```
+
+
+MacOS
+----
+
+```bash
+brew install redis
+
+redis-server
+88361:C 25 Apr 2023 17:03:42.203 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+88361:C 25 Apr 2023 17:03:42.203 # Redis version=7.0.11, bits=64, commit=00000000, modified=0, pid=88361, just started
+88361:C 25 Apr 2023 17:03:42.203 # Warning: no config file specified, using the default config. In order to specify a config file use redis-server /path/to/redis.conf
+88361:M 25 Apr 2023 17:03:42.203 * monotonic clock: POSIX clock_gettime
+                _._                                                  
+           _.-``__ ''-._                                             
+      _.-``    `.  `_.  ''-._           Redis 7.0.11 (00000000/0) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._                                  
+ (    '      ,       .-`  | `,    )     Running in standalone mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6379
+ |    `-._   `._    /     _.-'    |     PID: 88361
+  `-._    `-._  `-./  _.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |           https://redis.io       
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |                                  
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+      `-._    `-.__.-'    _.-'                                       
+          `-._        _.-'                                           
+              `-.__.-'                                               
+
+88361:M 25 Apr 2023 17:03:42.205 # Server initialized
+88361:M 25 Apr 2023 17:03:42.205 * Ready to accept connections
+```
+
+
+```bash
+redis-server --port 6380 --slaveof 127.0.0.1  6379
+88605:C 25 Apr 2023 17:04:15.658 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+88605:C 25 Apr 2023 17:04:15.658 # Redis version=7.0.11, bits=64, commit=00000000, modified=0, pid=88605, just started
+88605:C 25 Apr 2023 17:04:15.658 # Configuration loaded
+88605:S 25 Apr 2023 17:04:15.659 * monotonic clock: POSIX clock_gettime
+                _._                                                  
+           _.-``__ ''-._                                             
+      _.-``    `.  `_.  ''-._           Redis 7.0.11 (00000000/0) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._                                  
+ (    '      ,       .-`  | `,    )     Running in standalone mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6380
+ |    `-._   `._    /     _.-'    |     PID: 88605
+  `-._    `-._  `-./  _.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |           https://redis.io       
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |                                  
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+      `-._    `-.__.-'    _.-'                                       
+          `-._        _.-'                                           
+              `-.__.-'                                               
+
+88605:S 25 Apr 2023 17:04:15.660 # Server initialized
+88605:S 25 Apr 2023 17:04:15.661 * Ready to accept connections
+88605:S 25 Apr 2023 17:04:15.661 * Connecting to MASTER 127.0.0.1:6379
+88605:S 25 Apr 2023 17:04:15.661 * MASTER <-> REPLICA sync started
+88605:S 25 Apr 2023 17:04:15.661 * Non blocking connect for SYNC fired the event.
+88605:S 25 Apr 2023 17:04:15.661 * Master replied to PING, replication can continue...
+88605:S 25 Apr 2023 17:04:15.662 * Partial resynchronization not possible (no cached master)
+88605:S 25 Apr 2023 17:04:20.470 * Full resync from master: d9d6f6b9210bdc94a51c1108c40bdb92e2d1a249:0
+88605:S 25 Apr 2023 17:04:20.471 * MASTER <-> REPLICA sync: receiving streamed RDB from master with EOF to disk
+88605:S 25 Apr 2023 17:04:20.471 * MASTER <-> REPLICA sync: Flushing old data
+88605:S 25 Apr 2023 17:04:20.471 * MASTER <-> REPLICA sync: Loading DB in memory
+88605:S 25 Apr 2023 17:04:20.494 * Loading RDB produced by version 7.0.11
+88605:S 25 Apr 2023 17:04:20.494 * RDB age 0 seconds
+88605:S 25 Apr 2023 17:04:20.494 * RDB memory usage when created 1.12 Mb
+88605:S 25 Apr 2023 17:04:20.494 * Done loading RDB, keys loaded: 0, keys expired: 0.
+88605:S 25 Apr 2023 17:04:20.494 * MASTER <-> REPLICA sync: Finished with success
+```
+
+```bash
+redis-sentinel redis-sentinel/sentinel-local1.conf
+89071:X 25 Apr 2023 17:05:02.672 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+89071:X 25 Apr 2023 17:05:02.672 # Redis version=7.0.11, bits=64, commit=00000000, modified=0, pid=89071, just started
+89071:X 25 Apr 2023 17:05:02.672 # Configuration loaded
+89071:X 25 Apr 2023 17:05:02.672 * monotonic clock: POSIX clock_gettime
+                _._                                                  
+           _.-``__ ''-._                                             
+      _.-``    `.  `_.  ''-._           Redis 7.0.11 (00000000/0) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._                                  
+ (    '      ,       .-`  | `,    )     Running in sentinel mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 26379
+ |    `-._   `._    /     _.-'    |     PID: 89071
+  `-._    `-._  `-./  _.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |           https://redis.io       
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |                                  
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+      `-._    `-.__.-'    _.-'                                       
+          `-._        _.-'                                           
+              `-.__.-'                                               
+
+89071:X 25 Apr 2023 17:05:02.697 * Sentinel new configuration saved on disk
+89071:X 25 Apr 2023 17:05:02.697 # Sentinel ID is 20e95770c6f49cc01487f41bb86d09d04cc51194
+89071:X 25 Apr 2023 17:05:02.697 # +monitor master redis_ring 127.0.0.1 6379 quorum 2
+89071:X 25 Apr 2023 17:05:02.698 * +slave slave 127.0.0.1:6380 127.0.0.1 6380 @ redis_ring 127.0.0.1 6379
+89071:X 25 Apr 2023 17:05:02.719 * Sentinel new configuration saved on disk
+
+
+redis-sentinel redis-sentinel/sentinel-local2.conf
+redis-sentinel redis-sentinel/sentinel-local3.conf
+```

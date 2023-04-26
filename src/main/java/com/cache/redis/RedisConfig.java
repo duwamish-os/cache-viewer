@@ -11,7 +11,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConfiguration;
 import org.springframework.data.redis.connection.RedisNode;
 import org.springframework.data.redis.connection.RedisSentinelConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
@@ -24,7 +23,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisConfig {
 
     @Value("${redis.timeout}")
-    private String timeout;
+    private long timeout = 5000;
 
     @Value("${redis.sentinel.master}")
     String redisSentinelMaster;
@@ -115,19 +114,19 @@ public class RedisConfig {
             @Override
             @NonNull
             public Duration getCommandTimeout() {
-                return Duration.ofMillis(Long.parseLong(timeout));
+                return Duration.ofMillis(timeout);
             }
 
             @Override
             @NonNull
             public Duration getShutdownTimeout() {
-                return Duration.ofMillis(Long.parseLong(timeout));
+                return Duration.ofMillis(timeout);
             }
 
             @Override
             @NonNull
             public Duration getShutdownQuietPeriod() {
-                return Duration.ofMillis(Long.parseLong(timeout));
+                return Duration.ofMillis(timeout);
             }
         };
     }
