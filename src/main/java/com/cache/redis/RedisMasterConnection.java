@@ -20,8 +20,8 @@ import java.time.ZonedDateTime;
 public class RedisMasterConnection {
 
     static String key = "ml_candidate_id";
+    static String host_localhost_container = "172.25.0.11";
     static String host_localhost = "localhost";
-    static String host_127_0_0_1 = "127.0.0.1";
     static int port = 6379;
     static String redis = String.format("redis://%s:%d", host_localhost, port);
 
@@ -37,7 +37,7 @@ public class RedisMasterConnection {
      * "2023-04-28T20:51:07.444259"
      */
     private void jedisRedisExample(String key, String value) {
-        Jedis jedis = new Jedis("localhost", 6379);
+        Jedis jedis = new Jedis(host_localhost_container, port);
         jedis.set(key, value);
         String value1 = jedis.get(key);
         System.out.println("The value of the key is: " + value1);
@@ -52,7 +52,7 @@ public class RedisMasterConnection {
     }
 
     public static void lettuce() {
-        RedisURI redisURI = new RedisURI("localhost", 6379, Duration.ofMillis(500));
+        RedisURI redisURI = new RedisURI(host_localhost_container, port, Duration.ofMillis(500));
 
         RedisClient redisClient = RedisClient.create(redisURI);
         StatefulRedisConnection<String, String> connection = redisClient.connect();
@@ -66,7 +66,7 @@ public class RedisMasterConnection {
     }
     @PostConstruct
     public void after() {
-        //        jedisRedisExample(key, "jedis_" + LocalDateTime.now().toString());
+        jedisRedisExample(key, "jedis_" + LocalDateTime.now().toString());
         lettuce();
         lettuceRedisExample(key, "lettuce_spring_" + LocalDateTime.now().toString());
     }
