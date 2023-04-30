@@ -12,18 +12,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.RedisTemplate;
 
 @SpringBootApplication
-public class RedisApplication {
+public class RedisSentinelApplication {
 
     @Autowired
-    RedisTemplate<String, Object> redisTemplate;
+    RedisTemplate<String, Object> redisRingTemplate;
 
     public static void main(String... args) {
-        SpringApplication.run(RedisApplication.class, args);
+        SpringApplication.run(RedisSentinelApplication.class, args);
     }
 
     @Bean
     RedisApi redisApi(){
-        return new RedisApi(redisTemplate);
+        return new RedisApi(redisRingTemplate);
     }
 
     String rootTableExp = "ROOT_TABLE_EXPIRABLE";
@@ -33,7 +33,7 @@ public class RedisApplication {
 
     @PostConstruct
     public void populateCache() throws InterruptedException {
-        RedisApi redisApi = new RedisApi(redisTemplate);
+        RedisApi redisApi = new RedisApi(redisRingTemplate);
 //        redisApi.populateCache(10, rootTable, Optional.empty());
 //        redisApi.populateCache(10, rootTableExp, Optional.of(10));
 

@@ -8,11 +8,13 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisNode;
-import org.springframework.data.redis.connection.RedisSentinelConfiguration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.data.redis.connection.*;
 import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -26,30 +28,66 @@ public class RedisConfig {
     private long timeout = 5000;
 
     @Value("${redis.sentinel.master}")
-    String redisSentinelMaster;
+    String redisSentinelMaster = "redis_ring";
 
     @Value("${redis.sentinel.nodes}")
-    List<String> redisSentinelNodes;
+    List<String> redisSentinelNodes = List.of("127.0.0.1:26379", "127.0.0.1:26380");
 
-    @Bean
-    public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory connectionFactory) {
-        RedisTemplate<String, Object> redis = new RedisTemplate<>();
-        redis.setConnectionFactory(connectionFactory);
-        redis.setDefaultSerializer(new GenericJackson2JsonRedisSerializer());
-        redis.setKeySerializer(new StringRedisSerializer());
-        redis.setHashKeySerializer(new StringRedisSerializer());
-        redis.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-        redis.afterPropertiesSet();
-        return redis;
+    @Bean("standaloneRedisTemplate")
+    RedisTemplate<String, Object> getStandaloneRedisTemplate(
+            @Qualifier("standaloneConnectionFactory") RedisConnectionFactory standaloneConnectionFactory) {
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+
+        redisTemplate.setConnectionFactory(standaloneConnectionFactory);
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new StringRedisSerializer());
+        redisTemplate.afterPropertiesSet();
+
+        return redisTemplate;
     }
 
-    @Bean
-    public LettuceConnectionFactory connectionFactory() {
+    @Bean("standaloneRedisConfiguration")
+    RedisStandaloneConfiguration getStandaloneRedisConfiguration() {
+        return new RedisStandaloneConfiguration("127.0.0.1", 6379);
+    }
+
+    @Bean("standaloneConnectionFactory")
+    @Primary
+    public RedisConnectionFactory standaloneConnectionFactory(RedisStandaloneConfiguration configuration) {
+        RedisConnectionFactory connectionFactory = new LettuceConnectionFactory(configuration);
+        return connectionFactory;
+    }
+
+    //ring
+    @Bean("sentinelRedisConfiguration")
+    RedisSentinelConfiguration getSentinelRedisConfiguration() {
         List<RedisNode> redisNodes = getRedisNodes(redisSentinelNodes);
         RedisSentinelConfiguration redisSentinelConfiguration = new RedisSentinelConfiguration();
         redisSentinelConfiguration.master(redisSentinelMaster);
         redisSentinelConfiguration.setSentinels(redisNodes);
 
+        return redisSentinelConfiguration;
+    }
+
+    @Bean("redisRingTemplate")
+    public RedisTemplate<String, Object> redisRingTemplate(
+            @Qualifier("ringConnectionFactory") LettuceConnectionFactory connectionFactory) {
+        RedisTemplate<String, Object> redis = new RedisTemplate<>();
+        redis.setConnectionFactory(connectionFactory);
+
+        redis.setDefaultSerializer(new GenericJackson2JsonRedisSerializer());
+        redis.setKeySerializer(new StringRedisSerializer());
+
+        redis.setHashKeySerializer(new StringRedisSerializer());
+        redis.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+
+        redis.afterPropertiesSet();
+
+        return redis;
+    }
+
+    @Bean("ringConnectionFactory")
+    public LettuceConnectionFactory ringConnectionFactory(RedisSentinelConfiguration redisSentinelConfiguration) {
         return new LettuceConnectionFactory(redisSentinelConfiguration, getLettuceClientConfiguration());
     }
 

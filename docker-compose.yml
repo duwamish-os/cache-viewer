@@ -1,15 +1,29 @@
 version: '3.3'
 
+#  millionaire $ netstat -a -n | grep "LIST"
+#  tcp4       0      0  127.0.0.1.55380        *.*                    LISTEN
+#  tcp4       0      0  127.0.0.1.39624        *.*                    LISTEN
+#  tcp4       0      0  127.0.0.1.55350        *.*                    LISTEN
+#  tcp4       0      0  127.0.0.1.26380        *.*                    LISTEN
+#  tcp4       0      0  127.0.0.1.26379        *.*                    LISTEN
+#  tcp4       0      0  127.0.0.1.6380         *.*                    LISTEN
+#  tcp4       0      0  127.0.0.1.6379         *.*                    LISTEN
+#  tcp4       0      0  127.0.0.1.54246        *.*                    LISTEN
+#  tcp4       0      0  127.0.0.1.54247        *.*                    LISTEN
+#  tcp46      0      0  *.53741                *.*                    LISTEN
+#  tcp4       0      0  127.0.0.1.63342        *.*                    LISTEN
+#  tcp4       0      0  127.0.0.1.6942         *.*                    LISTEN
+
+#  root@0fedc9edd30e:/data# redis-cli --version
+#  redis-cli 7.0.11
 services:
 
-## http://dmitrypol.github.io/redis/2020/10/01/redis-sentinel.html
+  ## http://dmitrypol.github.io/redis/2020/10/01/redis-sentinel.html
   redis-master:
     image: redis
     container_name: redis-master
-    expose:
-      - 6379
     ports:
-      - 6379:6379
+      - "6379:6379"
     networks:
       vpnet:
         ipv4_address: 172.25.0.11
@@ -17,13 +31,11 @@ services:
   redis-slave:
     image: redis
     container_name: redis-slave
-    command: redis-server --slaveof redis-master 6379
+    command: redis-server --port 6380 --slaveof redis-master 6379
     links:
       - redis-master
-    expose:
-      - 6380
     ports:
-      - 6380:6380
+      - "6380:6380"
     networks:
       vpnet:
         ipv4_address: 172.25.0.12
@@ -35,10 +47,8 @@ services:
       context: ./redis-sentinel
     links:
       - redis-master
-    expose:
-      - 26379
     ports:
-      - 26379:26379
+      - "26379:26379"
     networks:
       vpnet:
         ipv4_address: 172.25.0.13
@@ -50,18 +60,16 @@ services:
       context: ./redis-sentinel
     links:
       - redis-master
-    expose:
-      - 26380
     ports:
-      - 26380:26379
+      - "26380:26379"
     networks:
       vpnet:
         ipv4_address: 172.25.0.14
 
-#  memcached:
-#    image: memcached:latest
-#    ports:
-#      - 11211:11211
+  #  memcached:
+  #    image: memcached:latest
+  #    ports:
+  #      - 11211:11211
 
   cache-vista-app:
     build:
@@ -85,4 +93,4 @@ networks:
       driver: default
       config:
         - subnet: 172.25.0.0/24
-          gateway: 172.25.0.1
+#          gateway: 172.25.0.1

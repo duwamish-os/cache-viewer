@@ -21,6 +21,7 @@ dependencies {
     implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.17.0'
     implementation 'org.redisson:redisson:3.19.0'
     implementation group: 'redis.clients', name: 'jedis', version: '4.3.1'
+    implementation 'redis.clients:jedis:4.3.0'
 
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
@@ -29,7 +30,7 @@ dependencies {
 
     implementation(group: 'org.apache.commons', name: 'commons-pool2', version: '2.0')
 
-    def springVersion = '2.7.6'
+    def springVersion = '2.7.10'
     implementation group: 'org.springframework.data', name: 'spring-data-redis', version: springVersion
     implementation(group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: springVersion)
 //    implementation group: 'org.springframework', name: 'spring-beans', version: '6.0.3'
