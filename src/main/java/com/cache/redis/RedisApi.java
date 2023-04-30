@@ -16,6 +16,7 @@ import org.springframework.data.redis.core.ScanOptions;
 
 public class RedisApi {
 
+    public static final String GLOBAL_KEY = "key-";
     RedisTemplate<String, Object> redisTemplate;
 
     public RedisApi(RedisTemplate<String, Object> redisTemplate) {
@@ -53,7 +54,7 @@ public class RedisApi {
         HashOperations<String, Object, Object> hashOps = redisTemplate.opsForHash();
 
         for (int i = 0; i < bound; i++) {
-            String hashKey = "key-" + i;
+            String hashKey = GLOBAL_KEY + i;
             String value = "value-" + i;
             hashOps.put(key, hashKey, value);
             //System.out.println(key + ": " + hashOps.get(key, hashKey));

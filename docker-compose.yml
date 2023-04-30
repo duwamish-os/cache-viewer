@@ -64,12 +64,8 @@ services:
       vpnet:
         ipv4_address: 172.25.0.14
 
-  #  memcached:
-  #    image: memcached:latest
-  #    ports:
-  #      - 11211:11211
-
   cache-vista-app:
+    container_name: cache-vista
     build:
       context: .
     depends_on:
@@ -83,6 +79,11 @@ services:
     networks:
       vpnet:
         ipv4_address: 172.25.0.15
+
+  memcached:
+    image: memcached:latest
+    ports:
+      - "11211:11211"
 
 networks:
   vpnet:

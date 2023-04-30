@@ -4,34 +4,42 @@ import io.lettuce.core.ClientOptions;
 import io.lettuce.core.ReadFrom;
 import io.lettuce.core.resource.ClientResources;
 import io.micrometer.core.lang.NonNull;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.data.redis.connection.*;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisNode;
+import org.springframework.data.redis.connection.RedisSentinelConfiguration;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 @Configuration
 public class RedisConfig {
 
-    @Value("${redis.timeout}")
-    private long timeout = 5000;
+    @Value("${redis.timeout:5000}")
+    private long timeout;
 
-    @Value("${redis.sentinel.master}")
-    String redisSentinelMaster = "redis_ring";
+    @Value("${redis.sentinel.master:redis_ring}")
+    String redisSentinelMaster;
 
-    @Value("${redis.sentinel.nodes}")
-    List<String> redisSentinelNodes = List.of("127.0.0.1:26379", "127.0.0.1:26380");
+    @Value("${redis.sentinel.nodes:172.25.0.13:26379,172.25.0.14:26379}")
+    List<String> redisSentinelNodes;
+
+    /**
+     * see docker-compose.yml for container to container network on bridge private network
+     */
+    static String container_host = "172.25.0.11";
 
     @Bean("standaloneRedisTemplate")
     RedisTemplate<String, Object> getStandaloneRedisTemplate(
@@ -48,17 +56,16 @@ public class RedisConfig {
 
     @Bean("standaloneRedisConfiguration")
     RedisStandaloneConfiguration getStandaloneRedisConfiguration() {
-        return new RedisStandaloneConfiguration("127.0.0.1", 6379);
+        return new RedisStandaloneConfiguration(container_host, 6379);
     }
 
     @Bean("standaloneConnectionFactory")
-    @Primary
     public RedisConnectionFactory standaloneConnectionFactory(RedisStandaloneConfiguration configuration) {
         RedisConnectionFactory connectionFactory = new LettuceConnectionFactory(configuration);
         return connectionFactory;
     }
 
-    //ring
+    //Redis ring
     @Bean("sentinelRedisConfiguration")
     RedisSentinelConfiguration getSentinelRedisConfiguration() {
         List<RedisNode> redisNodes = getRedisNodes(redisSentinelNodes);
@@ -87,7 +94,9 @@ public class RedisConfig {
     }
 
     @Bean("ringConnectionFactory")
-    public LettuceConnectionFactory ringConnectionFactory(RedisSentinelConfiguration redisSentinelConfiguration) {
+    @Primary
+    public LettuceConnectionFactory ringConnectionFactory(
+            @Qualifier("sentinelRedisConfiguration") RedisSentinelConfiguration redisSentinelConfiguration) {
         return new LettuceConnectionFactory(redisSentinelConfiguration, getLettuceClientConfiguration());
     }
 
