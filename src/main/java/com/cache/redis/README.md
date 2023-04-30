@@ -1,11 +1,11 @@
 
-```
-docker-compose up redis
+```bash
+docker-compose up
 ```
 
 verify connection 
 
-Follower
+Slave
 ----
 
 ```bash
@@ -15,16 +15,18 @@ options ndots:0
 ```
 
 ```bash
-## from follower nodes
-$ nmap -p 6379 127.0.0.1
+## from slave nodes
+$ docker exec -it $(docker ps -qf name=redis-slave) bash 
+root@d28a3ea55626:/data# nmap -p 6379 172.25.0.11
+Starting Nmap 7.80 ( https://nmap.org ) at 2023-04-30 22:07 UTC
+Nmap scan report for redis-master.cache-vista_vpnet (172.25.0.11)
+Host is up (0.00031s latency).
 
-Starting Nmap 6.40 ( http://nmap.org ) at 2023-04-25 20:53 UTC
-Nmap scan report for localhost (127.0.0.1)
-Host is up (0.00018s latency).
 PORT     STATE SERVICE
-6379/tcp open  unknown
+6379/tcp open  redis
+MAC Address: 02:42:AC:19:00:0B (Unknown)
 
-Nmap done: 1 IP address (1 host up) scanned in 0.12 seconds
+Nmap done: 1 IP address (1 host up) scanned in 0.18 seconds
 ```
 
 
@@ -32,12 +34,26 @@ Sentinel 1
 --
 
 ```bash
+$ docker exec -it $(docker ps -qf name=redis-sentinel1) bash
 root@1f6a133cce9d:/data# cat /etc/resolv.conf 
 nameserver 127.0.0.11
 options ndots:0
 ```
 
 ```bash
+## on sentinel
+root@f83baf6686f7:/redis# nmap -p 6379 172.25.0.11
+Starting Nmap 7.80 ( https://nmap.org ) at 2023-04-30 22:08 UTC
+Nmap scan report for redis-master.cache-vista_vpnet (172.25.0.11)
+Host is up (0.00028s latency).
+
+PORT     STATE SERVICE
+6379/tcp open  redis
+MAC Address: 02:42:AC:19:00:0B (Unknown)
+
+Nmap done: 1 IP address (1 host up) scanned in 0.19 seconds
+
+## on macos
 $ nmap -p 26379 127.0.0.1
 Starting Nmap 7.92 ( https://nmap.org ) at 2023-04-25 14:44 PDT
 Nmap scan report for localhost (127.0.0.1)
@@ -68,7 +84,7 @@ Pause leader
 --
 
 ```bash
-$ docker pause 9ff6a3ca3712
+$ docker pause $(docker ps -qf name=redis-master)
 9ff6a3ca3712
 ```
 
@@ -495,8 +511,10 @@ cluster_enabled:0
 
 # Keyspace
 db0:keys=1,expires=0,avg_ttl=0
+```
 
+```bash
 ## on macos
-millionaire $ redis-cli ping
+root@f83baf6686f7:/redis# redis-cli -h 172.25.0.11 ping
 PONG
 ```
