@@ -260,3 +260,185 @@ redis-slave        | 1:S 30 Apr 2023 23:19:06.277 * Trying a partial resynchroni
 redis-slave        | 1:S 30 Apr 2023 23:19:06.281 * Successful partial resynchronization with master.
 redis-slave        | 1:S 30 Apr 2023 23:19:06.282 * MASTER <-> REPLICA sync: Master accepted a Partial Resynchronization.
 ```
+
+Resources
+--
+
+```bash
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CONTAINER ID   NAME                      CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O     PIDS
+2bb924c5cfb4   cache-vista               60.82%    111.2MiB / 786MiB     14.15%    808B / 0B         0B / 98.3kB   14
+6557bf18f509   redis-sentinel1           4.31%     2.777MiB / 256MiB     1.08%     97.2kB / 34.2kB   0B / 20.5kB   6
+9ef24fcbdf6c   redis-slave               3.23%     2.824MiB / 256MiB     1.10%     35.5kB / 129kB    0B / 4.1kB    5
+0f4baa2be7ad   redis-sentinel2           5.18%     2.797MiB / 256MiB     1.09%     97.1kB / 34.1kB   0B / 20.5kB   6
+6eab611a2b6d   cache-vista-memcached-1   0.13%     1.578MiB / 3.826GiB   0.04%     1.25kB / 0B       0B / 0B       10
+cf260b75aa64   redis-master              1.03%     2.727MiB / 256MiB     1.07%     28.7kB / 56.9kB   0B / 0B       5
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CONTAINER ID   NAME                      CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O     PIDS
+2bb924c5cfb4   cache-vista               53.45%    113.9MiB / 786MiB     14.49%    808B / 0B         0B / 98.3kB   14
+6557bf18f509   redis-sentinel1           2.47%     2.777MiB / 256MiB     1.08%     97.6kB / 34.7kB   0B / 20.5kB   6
+9ef24fcbdf6c   redis-slave               1.19%     2.949MiB / 256MiB     1.15%     35.9kB / 129kB    0B / 4.1kB    5
+0f4baa2be7ad   redis-sentinel2           4.35%     2.793MiB / 256MiB     1.09%     103kB / 34.9kB    0B / 20.5kB   6
+6eab611a2b6d   cache-vista-memcached-1   0.06%     1.578MiB / 3.826GiB   0.04%     1.25kB / 0B       0B / 0B       10
+cf260b75aa64   redis-master              2.18%     2.715MiB / 256MiB     1.06%     29.7kB / 67.4kB   0B / 0B       5
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CONTAINER ID   NAME                      CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O     PIDS
+2bb924c5cfb4   cache-vista               53.45%    113.9MiB / 786MiB     14.49%    808B / 0B         0B / 98.3kB   14
+6557bf18f509   redis-sentinel1           2.47%     2.777MiB / 256MiB     1.08%     97.6kB / 34.7kB   0B / 20.5kB   6
+9ef24fcbdf6c   redis-slave               1.19%     2.949MiB / 256MiB     1.15%     35.9kB / 129kB    0B / 4.1kB    5
+0f4baa2be7ad   redis-sentinel2           4.35%     2.793MiB / 256MiB     1.09%     103kB / 34.9kB    0B / 20.5kB   6
+6eab611a2b6d   cache-vista-memcached-1   0.06%     1.578MiB / 3.826GiB   0.04%     1.25kB / 0B       0B / 0B       10
+cf260b75aa64   redis-master              2.18%     2.715MiB / 256MiB     1.06%     29.7kB / 67.4kB   0B / 0B       5
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CONTAINER ID   NAME                      CPU %     MEM USAGE / LIMIT     MEM %     NET I/O          BLOCK I/O     PIDS
+2bb924c5cfb4   cache-vista               53.45%    113.9MiB / 786MiB     14.49%    808B / 0B        0B / 98.3kB   14
+6557bf18f509   redis-sentinel1           2.85%     2.777MiB / 256MiB     1.08%     105kB / 36.6kB   0B / 20.5kB   6
+9ef24fcbdf6c   redis-slave               1.88%     2.82MiB / 256MiB      1.10%     37.8kB / 131kB   0B / 4.1kB    5
+0f4baa2be7ad   redis-sentinel2           2.41%     2.914MiB / 256MiB     1.14%     105kB / 36.7kB   0B / 20.5kB   6
+6eab611a2b6d   cache-vista-memcached-1   0.07%     1.578MiB / 3.826GiB   0.04%     1.25kB / 0B      0B / 0B       10
+cf260b75aa64   redis-master              1.96%     2.723MiB / 256MiB     1.06%     31kB / 69kB      0B / 0B       5
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CONTAINER ID   NAME                      CPU %     MEM USAGE / LIMIT     MEM %     NET I/O          BLOCK I/O     PIDS
+2bb924c5cfb4   cache-vista               55.79%    115.9MiB / 786MiB     14.74%    808B / 0B        0B / 98.3kB   15
+6557bf18f509   redis-sentinel1           2.85%     2.777MiB / 256MiB     1.08%     105kB / 36.6kB   0B / 20.5kB   6
+9ef24fcbdf6c   redis-slave               1.88%     2.82MiB / 256MiB      1.10%     37.8kB / 131kB   0B / 4.1kB    5
+0f4baa2be7ad   redis-sentinel2           2.41%     2.914MiB / 256MiB     1.14%     105kB / 36.7kB   0B / 20.5kB   6
+6eab611a2b6d   cache-vista-memcached-1   0.07%     1.578MiB / 3.826GiB   0.04%     1.25kB / 0B      0B / 0B       10
+cf260b75aa64   redis-master              1.96%     2.723MiB / 256MiB     1.06%     31kB / 69kB      0B / 0B       5
+```

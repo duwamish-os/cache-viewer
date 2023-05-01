@@ -27,6 +27,9 @@ services:
     networks:
       vpnet:
         ipv4_address: 172.25.0.11
+    cpus: "0.5"
+    mem_reservation: "128M"
+    mem_limit: "256M"
 
   redis-slave:
     image: redis
@@ -39,6 +42,9 @@ services:
     networks:
       vpnet:
         ipv4_address: 172.25.0.12
+    cpus: "0.5"
+    mem_reservation: "128M"
+    mem_limit: "256M"
 
   redis-sentinel1:
     container_name: redis-sentinel1
@@ -51,6 +57,9 @@ services:
     networks:
       vpnet:
         ipv4_address: 172.25.0.13
+    cpus: "0.5"
+    mem_reservation: "128M"
+    mem_limit: "256M"
 
   redis-sentinel2:
     container_name: redis-sentinel2
@@ -63,6 +72,9 @@ services:
     networks:
       vpnet:
         ipv4_address: 172.25.0.14
+    cpus: "0.5"
+    mem_reservation: "128M"
+    mem_limit: "256M"
 
   cache-vista-app:
     container_name: cache-vista
@@ -79,11 +91,25 @@ services:
     networks:
       vpnet:
         ipv4_address: 172.25.0.15
+    cpus: "0.5"
+    mem_reservation: "184M"
+    mem_limit: "512M"
+## docker-compose 3
+#    resources:
+#      limits:
+#        cpus: 1
+#        memory: 786m
+#      reservations:
+#        cpus: 0.5
+#        memory: 150m
 
   memcached:
     image: memcached:latest
     ports:
       - "11211:11211"
+    cpus: "0.5"
+    mem_reservation: "50M"
+    mem_limit: "512M"
 
 networks:
   vpnet:
